@@ -1,0 +1,4 @@
+#!/bin/bash
+# Connects to the server using a private key without -l
+
+ssh -i ~/.ssh/school ubuntu@server01
