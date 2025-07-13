@@ -1,35 +1,21 @@
 #!/usr/bin/env bash
-# Ignore shellcheck warning SC2086
+# Script to audit A records for specified subdomains of a given domain
 
-# Function to get DNS info of a subdomain
-get_record_info() {
-  local full_domain="$1"
-  dig ${full_domain} | grep -A1 "ANSWER SECTION:" | awk 'NR==2 {print $1, $4, $5}'
+domain="$1"
+subdomain="$2"
+
+get_record() {
+    local sub="$1"
+    local dom="$2"
+    local result
+    result=$(dig "${sub}.${dom}" +short | awk 'NR==1')
+    echo "The subdomain ${sub} is a A record and points to ${result}"
 }
 
-# Main logic
-domain=$1
-subdomain=$2
-
-if [ -z "$domain" ]; then
-  echo "Usage: $0 <domain> [subdomain]"
-  exit 1
-fi
-
 if [ -z "$subdomain" ]; then
-  # Check the 4 default subdomains in order
-  for sub in www lb-01 web-01 web-02; do
-    record=$(get_record_info "${sub}.${domain}")
-    subdomain_name=$(echo $record | awk '{print $1}')
-    record_type=$(echo $record | awk '{print $2}')
-    destination=$(echo $record | awk '{print $3}')
-    echo "The subdomain ${sub} is a ${record_type} record and points to ${destination}"
-  done
+    for s in www lb-01 web-01 web-02; do
+        get_record "$s" "$domain"
+    done
 else
-  # Check only the given subdomain
-  record=$(get_record_info "${subdomain}.${domain}")
-  subdomain_name=$(echo $record | awk '{print $1}')
-  record_type=$(echo $record | awk '{print $2}')
-  destination=$(echo $record | awk '{print $3}')
-  echo "The subdomain ${subdomain} is a ${record_type} record and points to ${destination}"
+    get_record "$subdomain" "$domain"
 fi
