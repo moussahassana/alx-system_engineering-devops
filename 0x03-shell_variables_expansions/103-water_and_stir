@@ -1,0 +1,2 @@
+#!/bin/bash
+python3 -c "import os as o\nt=lambda s,b:sum(b.index(c)*len(b)**i for i,c in enumerate(s[::-1]))\nb='bestchol'\nr=t(o.environ['WATER'],'water')+t(o.environ['STIR'],'stir.')\nprint((''.join([b[(r//(len(b)**i))%len(b)]for i in range(9)][::-1])).lstrip(b[0])or b[0])"
