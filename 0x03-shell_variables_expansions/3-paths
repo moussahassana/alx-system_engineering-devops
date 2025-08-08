@@ -1,2 +1,14 @@
 #!/bin/bash
-echo "$PATH" | tr ':' '\n' | wc -l
+
+# This script counts the number of valid directories listed in the PATH environment variable.
+# It handles cases with consecutive colons (::) which would otherwise be counted as empty directories.
+
+# 1. Print the contents of the PATH variable.
+# 2. Use `tr` to replace all colons (':') with newlines ('\n'),
+#    placing each directory on its own line.
+# 3. Use `grep -v '^$'` to filter out any empty lines, which result from consecutive colons.
+# 4. Use `wc -l` to count the remaining lines, giving us the total number of directories.
+count=$(echo "$PATH" | tr ':' '\n' | grep -v '^$' | wc -l)
+
+# Print the final count to the console.
+echo "Number of directories in PATH: $count"
