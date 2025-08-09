@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
-echo "hello $(id -un)"
+#!/bin/bash
+echo "hello MyUser"
